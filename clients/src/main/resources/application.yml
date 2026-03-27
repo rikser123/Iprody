@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: clients
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: "jdbc:postgresql://localhost:5432/iprody"
+#    url: "jdbc:postgresql://postgres:5432/iprody"
+    username: postgres
+    password: postgres
+    hikari:
+      schema: orders
+      connection-init-sql: CREATE SCHEMA IF NOT EXISTS "iprody-clients"
+      maximum-pool-size: 5
+      connection-timeout: 5000
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
+    default-schema: iprody-clients
+    liquibase-schema: iprody-clients
+    drop-first: false
+  data:
+    rest:
+      detection-strategy: annotated
+
+server:
+  port: 8081

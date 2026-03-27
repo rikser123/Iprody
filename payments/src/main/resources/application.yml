@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: payments
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: "jdbc:postgresql://localhost:5432/iprody"
+#    url: "jdbc:postgresql://postgres:5432/iprody"
+    username: postgres
+    password: postgres
+    hikari:
+      schema: iprody-payments
+      connection-init-sql: CREATE SCHEMA IF NOT EXISTS "iprody-payments"
+      maximum-pool-size: 5
+      connection-timeout: 5000
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
+    default-schema: iprody-payments
+    liquibase-schema: iprody-payments
+    drop-first: false
+  data:
+    rest:
+      detection-strategy: annotated
+
+server:
+  port: 8081
