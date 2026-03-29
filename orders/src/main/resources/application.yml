@@ -3,13 +3,8 @@ spring:
     name: orders
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: "jdbc:postgresql://localhost:5432/iprody"
-#    url: "jdbc:postgresql://postgres:5432/iprody"
-    username: postgres
-    password: postgres
     hikari:
       schema: iprody-orders
-      connection-init-sql: CREATE SCHEMA IF NOT EXISTS "iprody-orders"
       maximum-pool-size: 5
       connection-timeout: 5000
   jpa:
@@ -19,9 +14,6 @@ spring:
     default-schema: iprody-orders
     liquibase-schema: iprody-orders
     drop-first: false
-  data:
-    rest:
-      detection-strategy: annotated
 
 server:
   port: 8081

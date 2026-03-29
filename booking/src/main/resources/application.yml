@@ -3,10 +3,6 @@ spring:
     name: booking
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: "jdbc:postgresql://localhost:5432/iprody"
-#    url: "jdbc:postgresql://postgres:5432/iprody"
-    username: postgres
-    password: postgres
     hikari:
       schema: iprody-booking
       connection-init-sql: CREATE SCHEMA IF NOT EXISTS "iprody-booking"
