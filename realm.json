@@ -1,0 +1,231 @@
+{
+  "realm": "iprody",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "ADMIN",
+        "description": "Полный доступ ко всем функциям системы"
+      },
+      {
+        "name": "MANAGER",
+        "description": "Управление заказами и пользователями"
+      },
+      {
+        "name": "TEACHER",
+        "description": "Создание и управление учебным контентом"
+      },
+      {
+        "name": "INTERN",
+        "description": "Доступ только для чтения"
+      }
+    ]
+  },
+  "groups": [
+    {
+      "name": "admins",
+      "path": "/admins",
+      "realmRoles": ["ADMIN"],
+      "subGroups": []
+    },
+    {
+      "name": "managers",
+      "path": "/managers",
+      "realmRoles": ["MANAGER"],
+      "subGroups": []
+    },
+    {
+      "name": "teachers",
+      "path": "/teachers",
+      "realmRoles": ["TEACHER"],
+      "subGroups": []
+    },
+    {
+      "name": "interns",
+      "path": "/interns",
+      "realmRoles": ["INTERN"],
+      "subGroups": []
+    }
+  ],
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@iprody.com",
+      "firstName": "Иван",
+      "lastName": "Петров",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["offline_access", "uma_authorization"],
+      "groups": ["/admins"]
+    },
+    {
+      "username": "manager",
+      "enabled": true,
+      "email": "manager@iprody.com",
+      "firstName": "Елена",
+      "lastName": "Сидорова",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "manager123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["offline_access", "uma_authorization"],
+      "groups": ["/managers"]
+    },
+    {
+      "username": "teacher",
+      "enabled": true,
+      "email": "teacher@iprody.com",
+      "firstName": "Алексей",
+      "lastName": "Козлов",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "teacher123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["offline_access", "uma_authorization"],
+      "groups": ["/teachers"]
+    },
+    {
+      "username": "intern",
+      "enabled": true,
+      "email": "intern@iprody.com",
+      "firstName": "Мария",
+      "lastName": "Новикова",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "intern123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["offline_access", "uma_authorization"],
+      "groups": ["/interns"]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "orders-app",
+      "name": "Orders Application",
+      "enabled": true,
+      "bearerOnly": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "publicClient": false,
+      "secret": "Gk4Yb2xP9mTzWqR8nLcA1eFjVhD5sXo0",
+      "redirectUris": ["/*"],
+      "webOrigins": ["/*"]
+    }
+  ],
+  "clientScopes": [
+    {
+      "name": "roles",
+      "description": "OpenID Connect scope for add user roles to the access token",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true",
+        "consent.screen.text": "${rolesScopeConsentText}"
+      },
+      "protocolMappers": [
+        {
+          "name": "realm roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "audience resolve",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-resolve-mapper",
+          "consentRequired": false
+        }
+      ]
+    },
+    {
+      "name": "profile",
+      "description": "OpenID Connect scope for profile",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true",
+        "consent.screen.text": "${profileScopeConsentText}"
+      },
+      "protocolMappers": [
+        {
+          "name": "given name",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "firstName",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "given_name",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "family name",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "lastName",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "family_name",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "email",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "email",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "email",
+            "jsonType.label": "String"
+          }
+        }
+      ]
+    }
+  ],
+  "defaultDefaultClientScopes": [
+    "profile",
+    "roles"
+  ],
+  "internationalizationEnabled": false
+}

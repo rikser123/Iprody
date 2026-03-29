@@ -15,9 +15,3 @@ spring:
     default-schema: iprody-booking
     liquibase-schema: iprody-booking
     drop-first: false
-  data:
-    rest:
-      detection-strategy: annotated
-
-server:
-  port: 8081

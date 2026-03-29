@@ -14,6 +14,3 @@ spring:
     default-schema: iprody-orders
     liquibase-schema: iprody-orders
     drop-first: false
-
-server:
-  port: 8081

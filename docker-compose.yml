@@ -4,13 +4,104 @@ services:
   postgres:
     image: postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: iprody
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - '5432:5432'
     volumes:
-       - database:/var/lib/postgresql/data
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-volumes: 
+  booking:
+    build:
+      context: booking
+    environment:
+      DB_URL: ${POSTGRES_URL}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE: prod
+    restart: always
+    ports:
+      - '9000:8081'
+      - '9001:8443'
+      - '9002:5005'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  clients:
+    build:
+      context: clients
+    environment:
+      DB_URL: ${POSTGRES_URL}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE: prod
+    restart: always
+    ports:
+      - '7000:8081'
+      - '7001:8443'
+      - '7002:5005'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  orders:
+    build:
+      context: orders
+    environment:
+      DB_URL: ${POSTGRES_URL}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE: prod
+    restart: always
+    ports:
+      - '6000:8081'
+      - '6001:8443'
+      - '6002:5005'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  payments:
+    build:
+      context: payments
+    environment:
+      DB_URL: ${POSTGRES_URL}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE: prod
+    restart: always
+    ports:
+      - '5000:8081'
+      - '5001:8443'
+      - '5002:5005'
+    depends_on:
+      postgres:
+        condition: service_healthy
+        
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0  
+    command: start-dev --import-realm
+    ports:
+      - "4000:8080"
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: ${POSTGRES_URL}
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}    
+    volumes:
+      - ./realm.json:/opt/keycloak/data/import/realm-export.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy     
+
+volumes:
   database:
