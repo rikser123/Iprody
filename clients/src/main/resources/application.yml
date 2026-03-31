@@ -3,16 +3,13 @@ spring:
     name: clients
   datasource:
     driver-class-name: org.postgresql.Driver
-    hikari:
-      schema: orders  
+    hikari:   
       maximum-pool-size: 5
       connection-timeout: 5000
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
-    change-log: classpath:/db/changelog/changelog-master.xml
-    default-schema: iprody-clients
-    liquibase-schema: iprody-clients
+    change-log: classpath:/db/changelog/changelog-master.xml   
     drop-first: false
 
 server:

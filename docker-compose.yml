@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  postgres:
+  postgres-booking:
     image: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -10,18 +10,82 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - database:/var/lib/postgresql/data
+      - database-booking:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
+      
+  postgres-clients:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '5433:5432'
+    volumes:
+      - database-clients:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5  
+      
+  postgres-orders:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '5434:5432'
+    volumes:
+      - database-orders:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5   
+      
+  postgres-payments:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '5435:5432'
+    volumes:
+      - database-payments:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5  
+      
+  postgres-keycloak:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '5436:5432'
+    volumes:
+      - database-keycloak:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5        
 
   booking:
     build:
       context: booking
     environment:
-      DB_URL: ${POSTGRES_URL}
+      DB_URL: ${POSTGRES_BOOKING_URL}
       DB_USERNAME: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod
@@ -31,14 +95,14 @@ services:
       - '9001:8443'
       - '9002:5005'
     depends_on:
-      postgres:
+      postgres-booking:
         condition: service_healthy
 
   clients:
     build:
       context: clients
     environment:
-      DB_URL: ${POSTGRES_URL}
+      DB_URL: ${POSTGRES_CLIENTS_URL}
       DB_USERNAME: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod
@@ -48,14 +112,14 @@ services:
       - '7001:8443'
       - '7002:5005'
     depends_on:
-      postgres:
+      postgres-clients:
         condition: service_healthy
 
   orders:
     build:
       context: orders
     environment:
-      DB_URL: ${POSTGRES_URL}
+      DB_URL: ${POSTGRES_ORDERS_URL}
       DB_USERNAME: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod
@@ -65,14 +129,14 @@ services:
       - '6001:8443'
       - '6002:5005'
     depends_on:
-      postgres:
+      postgres-orders:
         condition: service_healthy
 
   payments:
     build:
       context: payments
     environment:
-      DB_URL: ${POSTGRES_URL}
+      DB_URL: ${POSTGRES_PAYMENTS_URL}
       DB_USERNAME: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod
@@ -82,7 +146,7 @@ services:
       - '5001:8443'
       - '5002:5005'
     depends_on:
-      postgres:
+      postgres-payments:
         condition: service_healthy
         
   keycloak:
@@ -92,7 +156,7 @@ services:
       - "4000:8080"
     environment:
       KC_DB: postgres
-      KC_DB_URL: ${POSTGRES_URL}
+      KC_DB_URL: ${POSTGRES_KEYCLOAK_URL}
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
@@ -100,8 +164,12 @@ services:
     volumes:
       - ./realm.json:/opt/keycloak/data/import/realm-export.json:ro
     depends_on:
-      postgres:
+      postgres-keycloak:
         condition: service_healthy     
 
 volumes:
-  database:
+  database-booking:
+  database-clients:
+  database-orders:
+  database-payments:
+  database-keycloak:

@@ -3,16 +3,13 @@ spring:
     name: payments
   datasource:
     driver-class-name: org.postgresql.Driver 
-    hikari:
-      schema: iprody-payments
+    hikari:      
       maximum-pool-size: 5
       connection-timeout: 5000
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
-    change-log: classpath:/db/changelog/changelog-master.xml
-    default-schema: iprody-payments
-    liquibase-schema: iprody-payments
+    change-log: classpath:/db/changelog/changelog-master.xml    
     drop-first: false  
 
 server:

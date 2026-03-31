@@ -1,5 +1,5 @@
 spring:
   datasource:
-    url: "jdbc:postgresql://localhost:5432/iprody"
+    url: "jdbc:postgresql://localhost:5434/iprody"
     username: postgres
     password: postgres
