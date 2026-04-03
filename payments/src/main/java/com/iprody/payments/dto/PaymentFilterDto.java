@@ -20,7 +20,7 @@ public class PaymentFilterDto {
   private Instant fromDate;
   private Instant toDate;
   private LocalDate date;
-  private int pageSize;
-  private int pageNumber;
+  private int pageSize = 25;
+  private int pageNumber = 0;
   private Map<String, String> sort;
 }

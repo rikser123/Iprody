@@ -27,3 +27,4 @@ jobs:
         run: |
           cd ${{ matrix.service }}
           ./gradlew build
+          ./gradlew test

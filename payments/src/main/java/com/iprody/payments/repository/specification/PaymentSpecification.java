@@ -34,9 +34,9 @@ public class PaymentSpecification implements Specification<Payment> {
     }
 
     if (!Objects.isNull(filterDto.getDate())) {
-      var start = filterDto.getDate().atStartOfDay().toInstant(ZoneOffset.UTC);
-      var end = filterDto.getDate().plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC);
-      predicates.add(criteriaBuilder.between(root.get("createdAt"), start, end));
+      var startInstant = filterDto.getDate().atStartOfDay().toInstant(ZoneOffset.UTC);
+      var endInstant = filterDto.getDate().plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC);
+      predicates.add(criteriaBuilder.between(root.get("createdAt"), startInstant, endInstant));
     } else if (!Objects.isNull(filterDto.getToDate()) && !Objects.isNull(filterDto.getFromDate())) {
       predicates.add(criteriaBuilder.between(root.get("createdAt"), filterDto.getFromDate(), filterDto.getToDate()));
     } else if (!Objects.isNull(filterDto.getToDate())) {
