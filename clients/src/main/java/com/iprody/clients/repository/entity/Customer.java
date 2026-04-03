@@ -1,5 +1,6 @@
 package com.iprody.clients.repository.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,7 +35,7 @@ public class Customer {
   @Column(name = "full_name", length = 30, nullable = false)
   private String fullName;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST})
   @JoinColumn(name = "contact_details_id", referencedColumnName = "id")
   private ContactDetails contactDetails;
 

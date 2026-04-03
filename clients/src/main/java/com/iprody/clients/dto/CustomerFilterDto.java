@@ -5,9 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor@NoArgsConstructor
-public class ClientFilterDto {
+@AllArgsConstructor
+@NoArgsConstructor
+public class CustomerFilterDto {
   private String fullName;
-  private int pageSize;
+  private int pageSize = 25;
   private int pageNumber;
 }

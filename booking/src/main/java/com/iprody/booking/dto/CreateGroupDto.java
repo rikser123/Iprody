@@ -9,9 +9,8 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupFilterDto {
+public class CreateGroupDto {
   private UUID groupRefId;
-  private Integer availablePlaces;
-  private Integer page = 1;
-  private Integer pageSize = 25;
+  private Integer currentCount;
+  private Integer limit;
 }
