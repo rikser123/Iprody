@@ -10,6 +10,7 @@ import com.iprody.orders.repository.entity.InquirySource;
 import com.iprody.orders.repository.entity.InquiryStatus;
 import com.iprody.orders.repository.specification.InquirySpecification;
 import com.iprody.orders.service.impl.InquiryServiceImpl;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
@@ -65,6 +67,26 @@ public class InquiryServiceTest {
     var result = inquiryService.update(UUID.randomUUID(), updateDto);
 
     assertThat(result.getStatus()).isEqualTo(updateDto.getStatus());
+  }
+
+  @Test
+  void shouldFindById() {
+    var entity = createInquiry();
+
+    when(inquiryRepository.findById(any())).thenReturn(Optional.of(entity));
+    var result = inquiryService.findByIdRequest(UUID.randomUUID());
+
+    assertThat(result.getComment()).isEqualTo(entity.getComment());
+    assertThat(result.getNote()).isEqualTo(entity.getNote());
+    assertThat(result.getSource()).isEqualTo(entity.getSource());
+  }
+
+  @Test
+  void findByIdThrowExpIfEmpty() {
+    when(inquiryRepository.findById(any())).thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> inquiryService.findByIdRequest(UUID.randomUUID()))
+     .isInstanceOf(EntityNotFoundException.class);
   }
 
   @Test
