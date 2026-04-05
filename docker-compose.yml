@@ -16,7 +16,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      
+
   postgres-clients:
     image: postgres
     environment:
@@ -31,8 +31,8 @@ services:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
-      retries: 5  
-      
+      retries: 5
+
   postgres-orders:
     image: postgres
     environment:
@@ -47,8 +47,8 @@ services:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
-      retries: 5   
-      
+      retries: 5
+
   postgres-payments:
     image: postgres
     environment:
@@ -63,8 +63,8 @@ services:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
-      retries: 5  
-      
+      retries: 5
+
   postgres-keycloak:
     image: postgres
     environment:
@@ -79,7 +79,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
-      retries: 5        
+      retries: 5
 
   booking:
     build:
@@ -152,9 +152,9 @@ services:
     depends_on:
       postgres-payments:
         condition: service_healthy
-        
+
   keycloak:
-    image: quay.io/keycloak/keycloak:26.0  
+    image: quay.io/keycloak/keycloak:26.0
     command: start-dev --import-realm
     ports:
       - "4000:8080"
@@ -164,12 +164,12 @@ services:
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}    
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     volumes:
       - ./realm.json:/opt/keycloak/data/import/realm-export.json:ro
     depends_on:
       postgres-keycloak:
-        condition: service_healthy     
+        condition: service_healthy
 
 volumes:
   database-booking:

@@ -3,11 +3,11 @@ spring:
     name: orders
   datasource:
     driver-class-name: org.postgresql.Driver
-    hikari:      
+    hikari:
       maximum-pool-size: 5
       connection-timeout: 5000
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
-    change-log: classpath:/db/changelog/changelog-master.xml   
+    change-log: classpath:/db/changelog/changelog-master.xml
     drop-first: false

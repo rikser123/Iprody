@@ -2,15 +2,15 @@ spring:
   application:
     name: payments
   datasource:
-    driver-class-name: org.postgresql.Driver 
-    hikari:      
+    driver-class-name: org.postgresql.Driver
+    hikari:
       maximum-pool-size: 5
       connection-timeout: 5000
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
-    change-log: classpath:/db/changelog/changelog-master.xml    
-    drop-first: false  
+    change-log: classpath:/db/changelog/changelog-master.xml
+    drop-first: false
 
 server:
   port: 8081
