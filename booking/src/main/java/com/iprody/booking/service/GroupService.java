@@ -39,5 +39,4 @@ public interface GroupService {
    * @return a Page object containing groups matching the filter criteria
    */
   Page<Group> findAll(GroupFilterDto dto);
-
 }

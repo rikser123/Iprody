@@ -13,8 +13,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -76,6 +78,8 @@ public class CustomerServiceTest {
     filterDto.setPageSize(25);
     filterDto.setPageNumber(0);
 
+    when(customerRepository.findAll(any(CustomerSpecification.class), any(PageRequest.class)))
+        .thenReturn(new PageImpl(Collections.emptyList(), PageRequest.of(1, 1), 5));
     customerService.findAll(filterDto);
 
     verify(customerRepository).findAll(any(CustomerSpecification.class), any(PageRequest.class));

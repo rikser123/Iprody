@@ -3,7 +3,6 @@ package com.iprody.clients.service;
 import com.iprody.clients.dto.CreateCustomerRequestDto;
 import com.iprody.clients.dto.CustomerFilterRequestDto;
 import com.iprody.clients.dto.CustomerResponseDto;
-import com.iprody.clients.repository.entity.Customer;
 import org.springframework.data.domain.Page;
 
 import java.util.UUID;

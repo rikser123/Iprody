@@ -14,8 +14,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -68,6 +70,9 @@ public class InquiryServiceTest {
   @Test
   void findAll() {
     var filterDto = new InquiryFilterDto();
+
+    when(inquiryRepository.findAll(any(InquirySpecification.class), any(PageRequest.class)))
+        .thenReturn(new PageImpl(Collections.emptyList(), PageRequest.of(1, 1), 5));
     inquiryService.findAll(filterDto);
 
     verify(inquiryRepository).findAll(any(InquirySpecification.class), any(PageRequest.class));
