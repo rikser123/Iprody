@@ -19,6 +19,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -60,6 +61,18 @@ public class GroupServiceTest {
 
     assertThat(result.getCurrentCount()).isEqualTo(4);
     assertThat(result.getLimit()).isEqualTo(5);
+  }
+
+  @Test
+  void updateThrowErrorThenCountGreaterLimit() {
+    var updateDto = new UpdateGroupDto();
+    updateDto.setCurrentCount(9);
+
+    when(groupRepository.findById(any())).thenReturn(Optional.of(createGroup()));
+
+
+    assertThatThrownBy(() -> groupService.updateGroup(UUID.randomUUID(), updateDto))
+    .isInstanceOf(IllegalStateException.class);
   }
 
   @Test

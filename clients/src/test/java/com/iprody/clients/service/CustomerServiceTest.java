@@ -9,6 +9,7 @@ import com.iprody.clients.repository.entity.ContactDetails;
 import com.iprody.clients.repository.entity.Customer;
 import com.iprody.clients.repository.specification.CustomerSpecification;
 import com.iprody.clients.service.impl.CustomerServiceImpl;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -25,6 +26,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 
@@ -69,6 +71,25 @@ public class CustomerServiceTest {
     assertThat(result.getEmail()).isEqualTo(dto.getEmail());
     assertThat(result.getFullName()).isEqualTo(dto.getFullName());
     assertThat(result.getPhoneNumber()).isEqualTo(dto.getPhoneNumber());
+  }
+
+  @Test
+  void shouldFindById() {
+    var entity = createCustomerEntity();
+    when(customerRepository.findById(any())).thenReturn(Optional.of(entity));
+    var result = customerService.findByIdRequest(UUID.randomUUID());
+
+    assertThat(result.getEmail()).isEqualTo(entity.getContactDetails().getEmail());
+    assertThat(result.getFullName()).isEqualTo(entity.getFullName());
+    assertThat(result.getPhoneNumber()).isEqualTo(entity.getContactDetails().getPhoneNumber());
+  }
+
+  @Test
+  void findByIdThrowExpIfEmpty() {
+    when(customerRepository.findById(any())).thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> customerService.findByIdRequest(UUID.randomUUID()))
+     .isInstanceOf(EntityNotFoundException.class);
   }
 
   @Test
