@@ -43,7 +43,8 @@ public class Inquiry {
   private UUID managerRefId;
 
   @Column(name = "source", length = 100, nullable = false)
-  private String source;
+  @Enumerated(EnumType.STRING)
+  private InquirySource source;
 
   @Column(name = "comment")
   private String comment;

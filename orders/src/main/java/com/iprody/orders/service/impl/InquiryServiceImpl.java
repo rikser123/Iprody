@@ -1,7 +1,8 @@
 package com.iprody.orders.service.impl;
 
-import com.iprody.orders.dto.CreateInquiryDto;
+import com.iprody.orders.dto.InquiryCreateRequestDto;
 import com.iprody.orders.dto.InquiryFilterDto;
+import com.iprody.orders.dto.InquiryResponseDto;
 import com.iprody.orders.dto.UpdateInquiryDto;
 import com.iprody.orders.mapper.InquiryMapper;
 import com.iprody.orders.repository.InquiryRepository;
@@ -29,11 +30,11 @@ public class InquiryServiceImpl implements InquiryService {
   private final InquiryMapper inquiryMapper;
 
   @Override
-  public Inquiry create(CreateInquiryDto dto) {
+  public InquiryResponseDto create(InquiryCreateRequestDto dto) {
     var entity = inquiryMapper.mapToEntity(dto);
     entity = inquiryRepository.save(entity);
 
-    return entity;
+    return inquiryMapper.mapToDto(entity);
   }
 
   @Override
@@ -47,17 +48,23 @@ public class InquiryServiceImpl implements InquiryService {
   }
 
   @Override
-  public Inquiry findById(UUID id) {
-    return inquiryRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Inquiry with id " + id + "not found"));
+  public InquiryResponseDto findByIdRequest(UUID id) {
+    var existingInquiry = findById(id);
+
+    return inquiryMapper.mapToDto(existingInquiry);
   }
 
   @Override
-  public Page<Inquiry> findAll(InquiryFilterDto dto) {
+  public Page<InquiryResponseDto> findAll(InquiryFilterDto dto) {
     var specification = new InquirySpecification(dto);
     var pageRequest = PageRequest.of(dto.getPageNumber(), dto.getPageSize(), buildSort(dto.getSort()));
 
-    return inquiryRepository.findAll(specification, pageRequest);
+    return inquiryRepository.findAll(specification, pageRequest).map(inquiryMapper::mapToDto);
+  }
+
+  private Inquiry findById(UUID id) {
+    return inquiryRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Inquiry with id " + id + "not found"));
   }
 
   private Sort buildSort(Map<String, String> sort) {

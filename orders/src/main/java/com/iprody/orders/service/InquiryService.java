@@ -1,7 +1,8 @@
 package com.iprody.orders.service;
 
-import com.iprody.orders.dto.CreateInquiryDto;
+import com.iprody.orders.dto.InquiryCreateRequestDto;
 import com.iprody.orders.dto.InquiryFilterDto;
+import com.iprody.orders.dto.InquiryResponseDto;
 import com.iprody.orders.dto.UpdateInquiryDto;
 import com.iprody.orders.repository.entity.Inquiry;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,7 @@ public interface InquiryService {
    * @param dto the data transfer object containing inquiry creation information
    * @return the created Inquiry entity
    */
-  Inquiry create(CreateInquiryDto dto);
+  InquiryResponseDto create(InquiryCreateRequestDto dto);
 
   /**
    * Updates an existing inquiry identified by the given ID.
@@ -37,7 +38,7 @@ public interface InquiryService {
    * @param id the unique identifier of the inquiry
    * @return the Inquiry entity
    */
-  Inquiry findById(UUID id);
+  InquiryResponseDto findByIdRequest(UUID id);
 
   /**
    * Retrieves a paginated list of inquiries based on the provided filter criteria.
@@ -46,5 +47,5 @@ public interface InquiryService {
    *            sorting criteria, and filtering conditions
    * @return a Page object containing inquiries matching the filter criteria
    */
-  Page<Inquiry> findAll(InquiryFilterDto dto);
+  Page<InquiryResponseDto> findAll(InquiryFilterDto dto);
 }
