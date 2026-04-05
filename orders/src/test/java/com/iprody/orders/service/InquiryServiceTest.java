@@ -1,11 +1,12 @@
 package com.iprody.orders.service;
 
-import com.iprody.orders.dto.CreateInquiryDto;
+import com.iprody.orders.dto.InquiryCreateRequestDto;
 import com.iprody.orders.dto.InquiryFilterDto;
 import com.iprody.orders.dto.UpdateInquiryDto;
 import com.iprody.orders.mapper.InquiryMapper;
 import com.iprody.orders.repository.InquiryRepository;
 import com.iprody.orders.repository.entity.Inquiry;
+import com.iprody.orders.repository.entity.InquirySource;
 import com.iprody.orders.repository.entity.InquiryStatus;
 import com.iprody.orders.repository.specification.InquirySpecification;
 import com.iprody.orders.service.impl.InquiryServiceImpl;
@@ -36,7 +37,7 @@ public class InquiryServiceTest {
   }
 
   @Test
-  void shouldCreateGroup() {
+  void shouldCreate() {
     var dto = createInquiryDto();
 
     when(inquiryRepository.save(any())).thenReturn(createInquiry());
@@ -72,9 +73,9 @@ public class InquiryServiceTest {
     verify(inquiryRepository).findAll(any(InquirySpecification.class), any(PageRequest.class));
   }
 
-  private static CreateInquiryDto createInquiryDto() {
-    var dto = new CreateInquiryDto();
-    dto.setSource("source");
+  private static InquiryCreateRequestDto createInquiryDto() {
+    var dto = new InquiryCreateRequestDto();
+    dto.setSource(InquirySource.TELEGRAM);
     dto.setComment("comment");
     dto.setNote("note");
 
@@ -83,7 +84,7 @@ public class InquiryServiceTest {
 
   private static Inquiry createInquiry() {
     var entity = new Inquiry();
-    entity.setSource("source");
+    entity.setSource(InquirySource.TELEGRAM);
     entity.setComment("comment");
     entity.setNote("note");
 

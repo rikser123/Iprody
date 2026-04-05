@@ -27,7 +27,7 @@ import java.util.UUID;
         @ApiResponse(responseCode = "400", description = "Bad request"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-@RequestMapping("api/v1/customers")
+@RequestMapping("/api/v1/customers")
 @RequiredArgsConstructor
 public class CustomerController {
   private final CustomerService customerService;
@@ -78,5 +78,4 @@ public class CustomerController {
   ) {
     return customerService.findByIdRequest(id);
   }
-
 }
