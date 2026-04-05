@@ -26,7 +26,7 @@ public class CustomerSpecification implements Specification<Customer> {
       predicates.add(criteriaBuilder.like(
           criteriaBuilder.lower(root.get("fullName")),
           "%" + fullName.toLowerCase() + "%"
-      ));;
+      ));
     }
 
     root.fetch("contactDetails");

@@ -25,7 +25,8 @@ public class CreateCustomerRequestDto {
   @Schema(description = "Customer email", example = "rar@rar.ru")
   private String email;
 
-  @Pattern(regexp = "^(\\+\\d{1,2}\\s?)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$", message = "Phone number must have correct format")
+  @Pattern(regexp = "^(\\+\\d{1,2}\\s?)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$",
+      message = "Phone number must have correct format")
   @Schema(description = "Customer phone number", example = "+7 916 134 45 67")
   private String phoneNumber;
 }
