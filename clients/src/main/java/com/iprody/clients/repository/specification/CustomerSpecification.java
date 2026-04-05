@@ -1,6 +1,6 @@
 package com.iprody.clients.repository.specification;
 
-import com.iprody.clients.dto.CustomerFilterDto;
+import com.iprody.clients.dto.CustomerFilterRequestDto;
 import com.iprody.clients.repository.entity.Customer;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 @RequiredArgsConstructor
 public class CustomerSpecification implements Specification<Customer> {
-  private final CustomerFilterDto filterDto;
+  private final CustomerFilterRequestDto filterDto;
 
   @Override
   public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {

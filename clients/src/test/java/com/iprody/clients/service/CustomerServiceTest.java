@@ -1,8 +1,8 @@
 package com.iprody.clients.service;
 
-import com.iprody.clients.dto.CreateCustomerDto;
-import com.iprody.clients.dto.CustomerFilterDto;
-import com.iprody.clients.dto.CustomerWithContactsDto;
+import com.iprody.clients.dto.CreateCustomerRequestDto;
+import com.iprody.clients.dto.CustomerFilterRequestDto;
+import com.iprody.clients.dto.CustomerResponseDto;
 import com.iprody.clients.mapper.CustomerMapper;
 import com.iprody.clients.repository.CustomerRepository;
 import com.iprody.clients.repository.entity.ContactDetails;
@@ -71,7 +71,7 @@ public class CustomerServiceTest {
 
   @Test
   void findAll() {
-    var filterDto = new CustomerFilterDto();
+    var filterDto = new CustomerFilterRequestDto();
     filterDto.setFullName("fullName");
     filterDto.setPageSize(25);
     filterDto.setPageNumber(0);
@@ -92,8 +92,8 @@ public class CustomerServiceTest {
     return customer;
   }
 
-  private static CreateCustomerDto createCustomerDto() {
-    var dto = new CreateCustomerDto();
+  private static CreateCustomerRequestDto createCustomerDto() {
+    var dto = new CreateCustomerRequestDto();
     dto.setEmail("email");
     dto.setFullName("fullName");
     dto.setPhoneNumber("phone");
@@ -101,8 +101,8 @@ public class CustomerServiceTest {
     return dto;
   }
 
-  private static CustomerWithContactsDto createWithContactsDto() {
-    var dto = new CustomerWithContactsDto();
+  private static CustomerResponseDto createWithContactsDto() {
+    var dto = new CustomerResponseDto();
     dto.setEmail("email");
     dto.setPhoneNumber("phone");
     dto.setFullName("fullName");
