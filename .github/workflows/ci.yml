@@ -26,5 +26,6 @@ jobs:
       - name: Build ${{ matrix.service }}
         run: |
           cd ${{ matrix.service }}
+          chmod +x ./gradlew
           ./gradlew build
           ./gradlew test
