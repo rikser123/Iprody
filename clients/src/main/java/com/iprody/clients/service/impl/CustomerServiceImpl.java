@@ -1,8 +1,8 @@
 package com.iprody.clients.service.impl;
 
-import com.iprody.clients.dto.CreateCustomerDto;
-import com.iprody.clients.dto.CustomerFilterDto;
-import com.iprody.clients.dto.CustomerWithContactsDto;
+import com.iprody.clients.dto.CreateCustomerRequestDto;
+import com.iprody.clients.dto.CustomerFilterRequestDto;
+import com.iprody.clients.dto.CustomerResponseDto;
 import com.iprody.clients.mapper.CustomerMapper;
 import com.iprody.clients.repository.CustomerRepository;
 import com.iprody.clients.repository.entity.Customer;
@@ -25,7 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
   private final CustomerMapper customerMapper;
 
   @Override
-  public CustomerWithContactsDto createCustomer(CreateCustomerDto dto) {
+  public CustomerResponseDto createCustomer(CreateCustomerRequestDto dto) {
     var entity = customerMapper.mapToEntity(dto);
     entity = customerRepository.save(entity);
 
@@ -33,7 +33,7 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public CustomerWithContactsDto update(UUID id, CreateCustomerDto dto) {
+  public CustomerResponseDto update(UUID id, CreateCustomerRequestDto dto) {
     var existingCustomer = findById(id);
     customerMapper.update(existingCustomer, dto);
 
@@ -42,16 +42,20 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public Customer findById(UUID id) {
-    return customerRepository.findById(id).
-        orElseThrow(() -> new EntityNotFoundException("Customer with id" + id + " not found"));
-  }
-
-  @Override
-  public Page<Customer> findAll(CustomerFilterDto dto) {
+  public Page<CustomerResponseDto> findAll(CustomerFilterRequestDto dto) {
     var specification = new CustomerSpecification(dto);
     var pageRequest = PageRequest.of(dto.getPageNumber(), dto.getPageSize());
 
-    return customerRepository.findAll(specification, pageRequest);
+    return customerRepository.findAll(specification, pageRequest).map(customerMapper::mapToDto);
+  }
+
+  public CustomerResponseDto findByIdRequest(UUID id) {
+    var existingCustomer = findById(id);
+    return customerMapper.mapToDto(existingCustomer);
+  }
+
+  private Customer findById(UUID id) {
+    return customerRepository.findById(id).
+        orElseThrow(() -> new EntityNotFoundException("Customer with id" + id + " not found"));
   }
 }
