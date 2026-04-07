@@ -2,7 +2,6 @@ package com.iprody.clients.service;
 
 import com.iprody.clients.dto.CreateCustomerRequestDto;
 import com.iprody.clients.dto.CustomerFilterRequestDto;
-import com.iprody.clients.dto.CustomerResponseDto;
 import com.iprody.clients.mapper.CustomerMapper;
 import com.iprody.clients.repository.CustomerRepository;
 import com.iprody.clients.repository.entity.ContactDetails;
@@ -122,15 +121,6 @@ public class CustomerServiceTest {
     dto.setEmail("email");
     dto.setFullName("fullName");
     dto.setPhoneNumber("phone");
-
-    return dto;
-  }
-
-  private static CustomerResponseDto createWithContactsDto() {
-    var dto = new CustomerResponseDto();
-    dto.setEmail("email");
-    dto.setPhoneNumber("phone");
-    dto.setFullName("fullName");
 
     return dto;
   }

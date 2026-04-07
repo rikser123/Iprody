@@ -1,10 +1,10 @@
 package com.iprody.clients.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,14 +15,14 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Parameters for customer creation")
 public class CreateCustomerRequestDto {
   @NotEmpty(message = "FullName must not be empty")
-  @Max(message = "FullName must be less then 30 characters", value = 30)
-  @Min(message = "FullName must be greater then 1 characters", value = 1)
+  @Size(min = 1, max = 30, message = "FullName must be between 1 and 30 characters")
   @Schema(description = "Customer fullName", example = "Ivan")
   private String fullName;
 
   @NotEmpty(message = "Email must not be empty")
-  @Max(message = "Email must be less then 50 characters", value = 50)
+  @Size(max = 50, message = "Email must be less than 50 characters")
   @Schema(description = "Customer email", example = "rar@rar.ru")
+  @Email
   private String email;
 
   @Pattern(regexp = "^(\\+\\d{1,2}\\s?)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$",

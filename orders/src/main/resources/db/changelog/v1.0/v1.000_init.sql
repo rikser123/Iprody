@@ -3,7 +3,7 @@ CREATE TABLE inquiry (
      product_ref_id UUID NOT NULL,
      customer_ref_id UUID NOT NULL,
      group_ref_id UUID,
-     manager_ref_id UUID NOT NULL,
+     manager_ref_id UUID,
      source VARCHAR(100) NOT NULL,
      comment VARCHAR,
      status VARCHAR(50) NOT NULL,

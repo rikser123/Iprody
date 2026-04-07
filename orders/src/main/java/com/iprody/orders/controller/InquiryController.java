@@ -11,13 +11,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
@@ -29,15 +30,15 @@ import java.util.UUID;
     })
 @RequestMapping("/api/v1/inquiries")
 @RequiredArgsConstructor
+@RestController
 public class InquiryController {
   private final InquiryService inquiryService;
 
-  @PutMapping("/list")
+  @GetMapping()
   @Operation(description = "Get a list of inquiries")
   public Page<InquiryResponseDto> getList(
       @Valid
-      @RequestBody
-      @Parameter(description = "Parameters for inquiry filtration", required = true)
+      @ParameterObject()
       InquiryFilterDto dto
   ) {
     return inquiryService.findAll(dto);
