@@ -81,7 +81,8 @@ public class InquiryControllerTest {
     mockMvc.perform(post("/api/v1/inquiries")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(dto)))
-        .andExpect(status().isBadRequest()); // TODO проверить формат ошибок после глобального обработчика ошибок
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error").value("Invalid request"));
   }
 
   @Test
