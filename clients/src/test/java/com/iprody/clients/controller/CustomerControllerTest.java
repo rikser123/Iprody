@@ -78,7 +78,8 @@ public class CustomerControllerTest {
     mockMvc.perform(post("/api/v1/customers")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(customerDto)))
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error").value("Invalid request"));
   }
 
   @Test
