@@ -6,7 +6,7 @@ CREATE TABLE contact_details(
     updated_at TIMESTAMP WITH TIME ZONE
 );
 
-CREATE TABLE customer(
+CREATE TABLE customer (
    id UUID PRIMARY KEY,
    full_name VARCHAR(30) NOT NULL,
    contact_details_id UUID,

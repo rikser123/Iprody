@@ -21,7 +21,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "customers")
+@Table(name = "customer")
 @Getter
 @Setter
 @AllArgsConstructor
