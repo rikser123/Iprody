@@ -11,3 +11,12 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog/changelog-master.xml
     drop-first: false
+    
+server:
+  port: 8443
+  ssl:
+    key-store: classpath:security/keystore.p12
+    key-store-password: changeit
+    key-store-type: PKCS12
+    key-alias: sbssl
+    
