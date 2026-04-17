@@ -90,14 +90,17 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod
       KEYCLOAK_ISSUER_URL: ${KEYCLOAK_ISSUER_URL}
+      KAFKA_HOST: ${KAFKA_HOST}
     restart: always
     ports:
-      - '9000:8081'
+      - '9000:8080'
       - '9001:8443'
       - '9002:5005'
     depends_on:
       postgres-booking:
-        condition: service_healthy
+        condition: service_healthy 
+      kafka:
+        condition: service_started    
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 30s
@@ -116,7 +119,7 @@ services:
       KEYCLOAK_ISSUER_URL: ${KEYCLOAK_ISSUER_URL}
     restart: always
     ports:
-      - '7000:8081'
+      - '7000:8080'
       - '7001:8443'
       - '7002:5005'
     depends_on:
@@ -138,14 +141,17 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod
       KEYCLOAK_ISSUER_URL: ${KEYCLOAK_ISSUER_URL}
+      KAFKA_HOST: ${KAFKA_HOST}
     restart: always
     ports:
-      - '6000:8081'
+      - '6000:8080'
       - '6001:8443'
       - '6002:5005'
     depends_on:
       postgres-orders:
-        condition: service_healthy
+        condition: service_healthy 
+      kafka:
+        condition: service_started      
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 30s
@@ -164,7 +170,7 @@ services:
       KEYCLOAK_ISSUER_URL: ${KEYCLOAK_ISSUER_URL}
     restart: always
     ports:
-      - '5000:8081'
+      - '5000:8080'
       - '5001:8443'
       - '5002:5005'
     depends_on:
@@ -194,6 +200,29 @@ services:
     depends_on:
       postgres-keycloak:
         condition: service_healthy
+        
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+      
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1    
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181    
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092                  
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  
+      
+      
 
 volumes:
   database-booking:

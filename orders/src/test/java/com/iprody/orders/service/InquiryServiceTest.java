@@ -3,6 +3,7 @@ package com.iprody.orders.service;
 import com.iprody.orders.dto.InquiryCreateRequestDto;
 import com.iprody.orders.dto.InquiryFilterDto;
 import com.iprody.orders.dto.UpdateInquiryDto;
+import com.iprody.orders.kafka.InquiryProducer;
 import com.iprody.orders.mapper.InquiryMapper;
 import com.iprody.orders.repository.InquiryRepository;
 import com.iprody.orders.repository.entity.Inquiry;
@@ -32,12 +33,14 @@ import static org.mockito.Mockito.when;
 public class InquiryServiceTest {
   private InquiryRepository inquiryRepository;
   private InquiryMapper mapper = Mappers.getMapper(InquiryMapper.class);
+  private InquiryProducer inquiryProducer;
   private InquiryService inquiryService;
 
   @BeforeEach
   void init() {
     inquiryRepository = Mockito.mock(InquiryRepository.class);
-    inquiryService = new InquiryServiceImpl(inquiryRepository, mapper);
+    inquiryProducer = Mockito.mock(InquiryProducer.class);
+    inquiryService = new InquiryServiceImpl(inquiryRepository, mapper, inquiryProducer);
   }
 
   @Test
