@@ -8,6 +8,7 @@ import com.iprody.orders.mapper.InquiryMapper;
 import com.iprody.orders.repository.InquiryRepository;
 import com.iprody.orders.repository.entity.Inquiry;
 import com.iprody.orders.repository.specification.InquirySpecification;
+import com.iprody.orders.kafka.InquiryProducer;
 import com.iprody.orders.service.InquiryService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Map;
@@ -28,16 +30,20 @@ import java.util.UUID;
 public class InquiryServiceImpl implements InquiryService {
   private final InquiryRepository inquiryRepository;
   private final InquiryMapper inquiryMapper;
+  private final InquiryProducer inquiryProducer;
 
   @Override
+  @Transactional
   public InquiryResponseDto create(InquiryCreateRequestDto dto) {
     var entity = inquiryMapper.mapToEntity(dto);
     entity = inquiryRepository.save(entity);
+    inquiryProducer.sendMessage(entity.getId(), entity.getGroupRefId());
 
     return inquiryMapper.mapToDto(entity);
   }
 
   @Override
+  @Transactional
   public Inquiry update(UUID id, UpdateInquiryDto dto) {
     var currentInquiry = findById(id);
     currentInquiry.setManagerRefId(dto.getManagerRefId());

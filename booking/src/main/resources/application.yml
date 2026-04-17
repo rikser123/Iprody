@@ -11,6 +11,14 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog/changelog-master.xml
     drop-first: false
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST}
+    consumer:
+      group-id: booking-service-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
     
 server:
   port: 8443

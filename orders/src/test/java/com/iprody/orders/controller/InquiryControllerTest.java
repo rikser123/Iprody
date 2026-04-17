@@ -5,6 +5,7 @@ import com.iprody.orders.repository.InquiryRepository;
 import com.iprody.orders.repository.entity.Inquiry;
 import com.iprody.orders.repository.entity.InquirySource;
 import com.iprody.orders.repository.entity.InquiryStatus;
+import com.iprody.orders.kafka.InquiryProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -42,6 +44,9 @@ public class InquiryControllerTest {
 
   @Autowired
   private InquiryRepository inquiryRepository;
+
+  @MockitoBean
+  private InquiryProducer inquiryProducer;
 
   private ObjectMapper objectMapper = new ObjectMapper();
 
