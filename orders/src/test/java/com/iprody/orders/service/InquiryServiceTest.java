@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -53,6 +54,18 @@ public class InquiryServiceTest {
     assertThat(result.getComment()).isEqualTo(dto.getComment());
     assertThat(result.getNote()).isEqualTo(dto.getNote());
     assertThat(result.getSource()).isEqualTo(dto.getSource());
+    verify(inquiryProducer, times(1)).sendInventoryMessage(result.getId(), result.getGroupRefId());
+  }
+
+
+  @Test
+  void shouldCancel() {
+    var inquiry = createInquiry();
+
+    when(inquiryRepository.findById(any())).thenReturn(Optional.of(inquiry));
+    inquiryService.cancel(UUID.randomUUID());
+
+    verify(inquiryProducer, times(1)).sendCancellationRequestMessage(inquiry.getId(), inquiry.getGroupRefId());
   }
 
   @Test
@@ -108,6 +121,7 @@ public class InquiryServiceTest {
     dto.setSource(InquirySource.TELEGRAM);
     dto.setComment("comment");
     dto.setNote("note");
+    dto.setGroupRefId(UUID.randomUUID());
 
     return dto;
   }

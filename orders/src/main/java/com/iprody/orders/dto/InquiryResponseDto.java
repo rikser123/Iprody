@@ -21,6 +21,9 @@ public class InquiryResponseDto {
   @Schema(description = "Inquiry product id", example = "550e8400-e29b-41d4-a716-446655440000")
   private UUID productRefId;
 
+  @Schema(description = "Group product id", example = "550e8400-e29b-41d4-a716-446655440000")
+  private UUID groupRefId;
+
   @Schema(description = "Inquiry customer id", example = "550e8400-e29b-41d4-a716-446655440000")
   private UUID customerRefId;
 

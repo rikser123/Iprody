@@ -2,10 +2,11 @@ package com.iprody.booking.service.impl;
 
 import com.iprody.booking.dto.CreateGroupDto;
 import com.iprody.booking.dto.GroupFilterDto;
-import com.iprody.booking.dto.UpdateGroupDto;
+import com.iprody.booking.exception.InquiryGroupException;
 import com.iprody.booking.mapper.GroupMapper;
 import com.iprody.booking.repository.GroupRepository;
 import com.iprody.booking.repository.entity.Group;
+import com.iprody.booking.repository.entity.GroupInquiry;
 import com.iprody.booking.repository.specification.GroupSpecification;
 import com.iprody.booking.service.GroupService;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -33,17 +35,46 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public Group updateGroup(UUID id, UpdateGroupDto dto) {
+  @Transactional
+  public Group increaseCount(UUID id, UUID inquiryId) {
     var currentGroup = findById(id);
 
-    if (dto.getCurrentCount() > currentGroup.getLimit()) {
+    if (isInquiryInGroup(currentGroup, inquiryId)) {
+      throw new InquiryGroupException(String.format("Inquiry %s is already in group %s", inquiryId, id));
+    }
+    var newCount = currentGroup.getCurrentCount() + 1;
+
+    if (newCount > currentGroup.getLimit()) {
       throw new IllegalStateException("Group is full");
     }
 
-    currentGroup.setCurrentCount(dto.getCurrentCount());
-    groupRepository.save(currentGroup);
+    var groupInquiry = new GroupInquiry();
+    groupInquiry.setGroup(currentGroup);
+    groupInquiry.setInquiryId(inquiryId);
+    currentGroup.getInquiries().add(groupInquiry);
 
-    return currentGroup;
+    return changeGroupCount(currentGroup, newCount);
+  }
+
+  @Override
+  @Transactional
+  public Group decreaseCount(UUID id, UUID inquiryId) {
+    var currentGroup = findById(id);
+    var newCount = currentGroup.getCurrentCount() - 1;
+
+    if (!isInquiryInGroup(currentGroup, inquiryId)) {
+      throw new InquiryGroupException(String.format("Inquiry %s is already in group %s", inquiryId, id));
+    }
+
+    if (newCount < 0) {
+      throw new IllegalStateException("Group count is negative");
+    }
+
+    currentGroup
+      .getInquiries()
+      .removeIf(gr ->  gr.getInquiryId().equals(inquiryId));
+
+    return changeGroupCount(currentGroup, newCount);
   }
 
   @Override
@@ -57,5 +88,17 @@ public class GroupServiceImpl implements GroupService {
   private Group findById(UUID id) {
     return groupRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Group with id" + id + " not found"));
+  }
+
+  private Group changeGroupCount(Group currentGroup, Integer newCount) {
+    currentGroup.setCurrentCount(newCount);
+    return groupRepository.save(currentGroup);
+  }
+
+  private boolean isInquiryInGroup(Group group,  UUID inquiryId) {
+    return group.getInquiries()
+      .stream()
+      .map(GroupInquiry::getInquiryId)
+      .anyMatch(id -> id.equals(inquiryId));
   }
 }

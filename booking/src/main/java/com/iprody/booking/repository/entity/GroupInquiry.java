@@ -1,41 +1,36 @@
 package com.iprody.booking.repository.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "groups")
+@Table(name = "group_inquiry")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Group {
+public class GroupInquiry {
   @Id
   @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
-  @Column(name = "current_count")
-  private Integer currentCount;
+  @ManyToOne()
+  @JoinColumn(name = "group_id", referencedColumnName = "id")
+  private Group group;
 
-  @Column(name = "max_limit")
-  private Integer limit;
-
-  @OneToMany(mappedBy = "group", fetch = FetchType.EAGER, cascade = { CascadeType.ALL}, orphanRemoval = true)
-  private Set<GroupInquiry> inquiries = new HashSet<>();
+  @Column(name = "inquiry_id", nullable = false)
+  private UUID inquiryId;
 }

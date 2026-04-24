@@ -33,11 +33,18 @@ public class InquiryServiceImpl implements InquiryService {
   private final InquiryProducer inquiryProducer;
 
   @Override
+  public InquiryResponseDto cancel(UUID id) {
+    var inquiry = findById(id);
+    inquiryProducer.sendCancellationRequestMessage(inquiry.getId(), inquiry.getGroupRefId());
+    return inquiryMapper.mapToDto(inquiry);
+  }
+
+  @Override
   @Transactional
   public InquiryResponseDto create(InquiryCreateRequestDto dto) {
     var entity = inquiryMapper.mapToEntity(dto);
     entity = inquiryRepository.save(entity);
-    inquiryProducer.sendMessage(entity.getId(), entity.getGroupRefId());
+    inquiryProducer.sendInventoryMessage(entity.getId(), entity.getGroupRefId());
 
     return inquiryMapper.mapToDto(entity);
   }
