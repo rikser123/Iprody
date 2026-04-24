@@ -1,6 +1,12 @@
 CREATE TABLE groups(
     id UUID PRIMARY KEY,
-    group_ref_id UUID NOT NULL,
     current_count INTEGER,
-    "limit" INTEGER
+    max_limit INTEGER
+);
+
+CREATE TABLE group_inquiry (
+   id UUID PRIMARY KEY,
+   group_id UUID NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
+   inquiry_id UUID NOT NULL,
+   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

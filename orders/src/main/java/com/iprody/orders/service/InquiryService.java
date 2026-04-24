@@ -41,6 +41,14 @@ public interface InquiryService {
   InquiryResponseDto findByIdRequest(UUID id);
 
   /**
+   * Cancel an inquiry by its unique identifier.
+   *
+   * @param id the unique identifier of the inquiry
+   * @return the Inquiry entity
+   */
+  InquiryResponseDto cancel(UUID id);
+
+  /**
    * Retrieves a paginated list of inquiries based on the provided filter criteria.
    *
    * @param dto the filter data transfer object containing pagination parameters,

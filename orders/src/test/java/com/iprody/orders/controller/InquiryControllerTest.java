@@ -64,6 +64,7 @@ public class InquiryControllerTest {
     dto.setSource(InquirySource.TELEGRAM);
     dto.setComment("comment");
     dto.setNote("note");
+    dto.setGroupRefId(UUID.randomUUID());
 
     mockMvc.perform(post("/api/v1/inquiries")
             .contentType(MediaType.APPLICATION_JSON)

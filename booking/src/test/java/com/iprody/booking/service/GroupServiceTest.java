@@ -2,10 +2,11 @@ package com.iprody.booking.service;
 
 import com.iprody.booking.dto.CreateGroupDto;
 import com.iprody.booking.dto.GroupFilterDto;
-import com.iprody.booking.dto.UpdateGroupDto;
+import com.iprody.booking.exception.InquiryGroupException;
 import com.iprody.booking.mapper.GroupMapper;
 import com.iprody.booking.repository.GroupRepository;
 import com.iprody.booking.repository.entity.Group;
+import com.iprody.booking.repository.entity.GroupInquiry;
 import com.iprody.booking.repository.specification.GroupSpecification;
 import com.iprody.booking.service.impl.GroupServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,32 +48,80 @@ public class GroupServiceTest {
   }
 
   @Test
-  void shouldUpdate() {
-    var updateDto = new UpdateGroupDto();
-    updateDto.setCurrentCount(4);
+  void shouldIncreaseCount() {
+    var group = createGroup();
 
-    when(groupRepository.findById(any())).thenReturn(Optional.of(createGroup()));
-    when(groupRepository.save(argThat(group -> {
-      assertThat(group.getCurrentCount()).isEqualTo(updateDto.getCurrentCount());
+    when(groupRepository.findById(any())).thenReturn(Optional.of(group));
+    when(groupRepository.save(argThat(g -> {
+      assertThat(g.getCurrentCount()).isEqualTo(4);
       return true;
-    }))).thenReturn(createGroup());
+    }))).thenReturn(group);
 
-    var result = groupService.updateGroup(UUID.randomUUID(), updateDto);
+    var result = groupService.increaseCount(UUID.randomUUID(), UUID.randomUUID());
 
     assertThat(result.getCurrentCount()).isEqualTo(4);
     assertThat(result.getLimit()).isEqualTo(5);
+    assertThat(result.getInquiries().size()).isEqualTo(2);
+  }
+
+  @Test
+  void shouldThrowErrorThanInquiryInGroup() {
+    var group = createGroup();
+    when(groupRepository.findById(any())).thenReturn(Optional.of(group));
+
+    assertThatThrownBy(() -> groupService.increaseCount(UUID.randomUUID(),
+      group.getInquiries().stream().toList().get(0).getInquiryId()))
+      .isInstanceOf(InquiryGroupException.class);
   }
 
   @Test
   void updateThrowErrorThenCountGreaterLimit() {
-    var updateDto = new UpdateGroupDto();
-    updateDto.setCurrentCount(9);
+    var group = createGroup();
+    group.setLimit(1);
 
-    when(groupRepository.findById(any())).thenReturn(Optional.of(createGroup()));
+    when(groupRepository.findById(any())).thenReturn(Optional.of(group));
 
-
-    assertThatThrownBy(() -> groupService.updateGroup(UUID.randomUUID(), updateDto))
+    assertThatThrownBy(() -> groupService.increaseCount(UUID.randomUUID(), UUID.randomUUID()))
     .isInstanceOf(IllegalStateException.class);
+  }
+
+  @Test
+  void shouldDecreaseCount() {
+    var group = createGroup();
+
+    when(groupRepository.findById(any())).thenReturn(Optional.of(group));
+    when(groupRepository.save(argThat(g -> {
+      assertThat(g.getCurrentCount()).isEqualTo(2);
+      return true;
+    }))).thenReturn(group);
+
+    var result = groupService.decreaseCount(UUID.randomUUID(),
+      group.getInquiries().stream().toList().get(0).getInquiryId());
+
+    assertThat(result.getCurrentCount()).isEqualTo(2);
+    assertThat(result.getLimit()).isEqualTo(5);
+    assertThat(group.getInquiries().size()).isEqualTo(0);
+  }
+
+  @Test
+  void updateThrowErrorThenCountIsNegative() {
+    var group = createGroup();
+    group.setCurrentCount(0);
+
+    when(groupRepository.findById(any())).thenReturn(Optional.of(group));
+
+    assertThatThrownBy(() -> groupService.decreaseCount(UUID.randomUUID(),
+      group.getInquiries().stream().toList().get(0).getInquiryId()))
+      .isInstanceOf(IllegalStateException.class);
+  }
+
+  @Test
+  void shouldThrowErrorThanInquiryIsNotInGroup() {
+    var group = createGroup();
+    when(groupRepository.findById(any())).thenReturn(Optional.of(group));
+
+    assertThatThrownBy(() -> groupService.decreaseCount(UUID.randomUUID(), UUID.randomUUID()))
+      .isInstanceOf(InquiryGroupException.class);
   }
 
   @Test
@@ -88,9 +137,13 @@ public class GroupServiceTest {
   private static Group createGroup() {
     var group = new Group();
     group.setId(UUID.randomUUID());
-    group.setGroupRefId(UUID.randomUUID());
     group.setLimit(5);
     group.setCurrentCount(3);
+
+    var groupInquiry = new GroupInquiry();
+    groupInquiry.setGroup(group);
+    groupInquiry.setInquiryId(UUID.randomUUID());
+    group.getInquiries().add(groupInquiry);
 
     return group;
   }

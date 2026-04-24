@@ -23,6 +23,10 @@ public class InquiryCreateRequestDto {
   private UUID customerRefId;
 
   @NotNull
+  @Schema(description = "group id for inquiry", example = "550e8400-e29b-41d4-a716-446655440000")
+  private UUID groupRefId;
+
+  @NotNull
   @Schema(description = "Source of inquiry", example = "LANDING_PAGE")
   private InquirySource source;
 

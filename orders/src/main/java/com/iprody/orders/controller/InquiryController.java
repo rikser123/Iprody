@@ -64,4 +64,14 @@ public class InquiryController {
   ) {
     return inquiryService.findByIdRequest(id);
   }
+
+  @GetMapping("/cancellation/{id}")
+  @Operation(description = "Cancel inquiry by ID")
+  public InquiryResponseDto cancel(
+    @Parameter(description = "Inquiry id", required = true, example = "123e4567-e89b-12d3-a456-426614174000")
+    @PathVariable
+    UUID id
+  ) {
+    return inquiryService.findByIdRequest(id);
+  }
 }

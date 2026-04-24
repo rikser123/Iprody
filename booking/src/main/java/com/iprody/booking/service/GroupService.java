@@ -2,7 +2,6 @@ package com.iprody.booking.service;
 
 import com.iprody.booking.dto.CreateGroupDto;
 import com.iprody.booking.dto.GroupFilterDto;
-import com.iprody.booking.dto.UpdateGroupDto;
 import com.iprody.booking.repository.entity.Group;
 import org.springframework.data.domain.Page;
 
@@ -23,13 +22,22 @@ public interface GroupService {
   Group createGroup(CreateGroupDto dto);
 
   /**
-   * Updates an existing group identified by the given ID.
+   * Increase group limit by the given ID.
    *
    * @param id the unique identifier of the group to update
-   * @param dto the data transfer object containing updated group information
+   * @param inquiryId the unique identifier of the inquiry to update
    * @return the updated Group entity
    */
-  Group updateGroup(UUID id, UpdateGroupDto dto);
+  Group increaseCount(UUID id, UUID inquiryId);
+
+  /**
+   * Decrease group limit by the given ID.
+   *
+   * @param id the unique identifier of the group to update
+   * @param inquiryId the unique identifier of the inquiry to update
+   * @return the updated Group entity
+   */
+  Group decreaseCount(UUID id, UUID inquiryId);
 
   /**
    * Retrieves a paginated list of groups based on the provided filter criteria.
