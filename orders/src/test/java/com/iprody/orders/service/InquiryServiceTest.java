@@ -116,6 +116,15 @@ public class InquiryServiceTest {
     verify(inquiryRepository).findAll(any(InquirySpecification.class), any(PageRequest.class));
   }
 
+  @Test
+  void shouldChangeStatus() {
+    var inquiry = createInquiry();
+    when(inquiryRepository.findById(any())).thenReturn(Optional.of(inquiry));
+    inquiryService.changeStatus(UUID.randomUUID(), InquiryStatus.PAYMENT);
+
+    assertThat(inquiry.getStatus()).isEqualTo(InquiryStatus.PAYMENT);
+  }
+
   private static InquiryCreateRequestDto createInquiryDto() {
     var dto = new InquiryCreateRequestDto();
     dto.setSource(InquirySource.TELEGRAM);

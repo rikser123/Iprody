@@ -11,6 +11,14 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog/changelog-master.xml
     drop-first: false
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3
+      properties:
+        enable.idempotence: true
 
 server:
   port: 8443

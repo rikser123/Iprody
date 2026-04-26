@@ -72,6 +72,6 @@ public class InquiryController {
     @PathVariable
     UUID id
   ) {
-    return inquiryService.findByIdRequest(id);
+    return inquiryService.cancel(id);
   }
 }
