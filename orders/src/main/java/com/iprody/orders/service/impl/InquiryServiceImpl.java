@@ -7,6 +7,7 @@ import com.iprody.orders.dto.UpdateInquiryDto;
 import com.iprody.orders.mapper.InquiryMapper;
 import com.iprody.orders.repository.InquiryRepository;
 import com.iprody.orders.repository.entity.Inquiry;
+import com.iprody.orders.repository.entity.InquiryStatus;
 import com.iprody.orders.repository.specification.InquirySpecification;
 import com.iprody.orders.kafka.InquiryProducer;
 import com.iprody.orders.service.InquiryService;
@@ -73,6 +74,14 @@ public class InquiryServiceImpl implements InquiryService {
     var pageRequest = PageRequest.of(dto.getPageNumber(), dto.getPageSize(), buildSort(dto.getSort()));
 
     return inquiryRepository.findAll(specification, pageRequest).map(inquiryMapper::mapToDto);
+  }
+
+  @Transactional
+  @Override
+  public InquiryResponseDto changeStatus(UUID inquiryId, InquiryStatus status) {
+    var currentInquiry = findById(inquiryId);
+    currentInquiry.setStatus(status);
+    return inquiryMapper.mapToDto(inquiryRepository.save(currentInquiry));
   }
 
   private Inquiry findById(UUID id) {

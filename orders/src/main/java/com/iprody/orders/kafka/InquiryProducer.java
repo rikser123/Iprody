@@ -4,13 +4,13 @@ import com.iprody.orders.dto.InventoryRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 public class InquiryProducer {
   private static final String TOPIC_INVENTORY_REQUEST = "inventory.request";

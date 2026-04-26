@@ -5,6 +5,7 @@ import com.iprody.orders.dto.InquiryFilterDto;
 import com.iprody.orders.dto.InquiryResponseDto;
 import com.iprody.orders.dto.UpdateInquiryDto;
 import com.iprody.orders.repository.entity.Inquiry;
+import com.iprody.orders.repository.entity.InquiryStatus;
 import org.springframework.data.domain.Page;
 
 import java.util.UUID;
@@ -56,4 +57,12 @@ public interface InquiryService {
    * @return a Page object containing inquiries matching the filter criteria
    */
   Page<InquiryResponseDto> findAll(InquiryFilterDto dto);
+  /**
+   * Retrieves an inquiry with changed status.
+   *
+   * @param inquiryId id of current inquiry
+   * @param status new status of inquiry
+   * @return the Inquiry entity
+   */
+  InquiryResponseDto changeStatus(UUID inquiryId, InquiryStatus status);
 }
